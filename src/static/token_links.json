@@ -1,0 +1,121 @@
+{
+    "solo": {
+        "website": "https://sologenic.org/",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/realSologenic"},
+            {"prop": "lcw", "linkUrl": "https://www.livecoinwatch.com/price/Sologenic-SOLO"},
+            {"prop": "bitrue", "linkUrl": "https://www.bitrue.com/trade/solo_usdt"}
+        ]
+    },
+    "els": {
+        "website": "https://www.aesthetes.art/",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/Elysianers"},
+            {"prop": "lcw", "linkUrl": "https://www.livecoinwatch.com/price/Elysian-ELS"},
+            {"prop": "bitrue", "linkUrl": "https://www.bitrue.com/trade/els_usdt"},
+            {"prop": "hotbit", "linkUrl": "https://www.hotbit.io/exchange?symbol=ELS_USDT"}
+        ]
+    },
+    "xrdoge": {
+        "website": "https://xrdoge.com/",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://mobile.twitter.com/xrdoge"},
+            {"prop": "bitrue", "linkUrl": "https://www.bitrue.com/trade/xrdoge_usdt"},
+            {"prop": "cmc", "linkUrl": "https://coinmarketcap.com/currencies/xrdoge/"},
+            {"prop": "coingecko", "linkUrl": "https://www.coingecko.com/en/coins/xrdoge/usd"},
+            {"prop": "lcw", "linkUrl": "https://www.livecoinwatch.com/price/XRDOGE-XRDOGE" },
+            {"prop": "whitebit", "linkUrl": "https://whitebit.com/trade-pro/XRDOGE_USDT?type=spot"}
+        ]
+    },
+    "equilibrium": {
+        "website": "https://equilibrium-games.com",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/Equilibrium_G"},
+            {"prop": "bitrue", "linkUrl": "https://www.bitrue.com/trade/eq_usdt"},
+            {"prop": "lcw", "linkUrl": "https://www.livecoinwatch.com/price/Equilibrium-EQ"}
+        ]
+    },
+    "csc": {
+        "website": "https://casinocoin.im/",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/CasinoCoin"},
+            {"prop": "bitrue", "linkUrl": "https://www.bitrue.com/trade/cscxrpl_usdt"},
+            {"prop": "lcw", "linkUrl": "https://www.livecoinwatch.com/price/CasinoCoin-CSC"}
+        ]
+    },
+    "xfloki": {
+        "website": "https://www.xflokicoin.com/",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/XFLOKICOIN"}
+        ]
+    },
+    "xwsb": {
+        "website": "https://linktr.ee/xwallstreetbets",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/xwallstreetbets"}
+        ]
+    },
+    "xpunk": {
+        "website": "https://lnk.bio/xpunks.official",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/XRPLPUNKS"},
+            {"prop": "bitrue", "linkUrl": "https://www.bitrue.com/trade/xpunk_usdt"}
+        ]
+    },
+    "xshibanu": {
+        "website": "https://linktr.ee/XShibanu",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/XShibanu"}
+        ]
+    },
+    "bay": {
+        "website": "https://linktr.ee/BoredApesXRP",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/BoredApesXRP"}
+        ]
+    },
+    "xrpitbull": {
+        "website": "https://www.realxrpitbull.com/",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/realXRPitbull"},
+            {"prop": "lcw", "linkUrl": "https://www.livecoinwatch.com/price/XRPitbull-XRPITBULL" }
+        ]
+    },
+    "cx1": {
+        "website": "https://chorusx.com/",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/ChorusXapp"},
+            {"prop": "bitrue", "linkUrl": "https://www.bitrue.com/trade/cx1_usdt"}
+        ]
+    },
+    "xqk": {
+        "website": "https://t.co/3Suzpx0LAi",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/officialXQK"}
+        ]
+    },
+    "xrshib": {
+        "website": "https://linktr.ee/XRshib",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/XRshib"}
+        ]
+    },
+    "xsamo": {
+        "website": "https://linktr.ee/xrpsamoyed",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/xrpsamoyed"}
+        ]
+    },
+    "sgb": {
+        "website": "https://www.flowcode.com/page/flarefinance",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://mobile.twitter.com/songbirdcomm"}
+        ]
+    },
+    "xzillas": {
+        "website": "https://mobile.twitter.com/XZillasXRPL",
+        "links": [
+            {"prop": "twit", "linkUrl": "https://twitter.com/ChorusXapp"}
+        ]
+    }
+}

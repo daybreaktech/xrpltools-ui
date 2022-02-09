@@ -1,0 +1,38 @@
+{
+    "twit": {
+        "label": "Twitter",
+        "iconUrl": "https://xrpltoolssotrage.blob.core.windows.net/photos/banner_twitter.png"
+    },
+    "bitrue": {
+        "label": "Bitrue",
+        "iconUrl": "https://xrpltoolssotrage.blob.core.windows.net/photos/banner_bitrue.png"
+    },
+    "cmc": {
+        "label": "CoinMarketCap",
+        "iconUrl": "https://xrpltoolssotrage.blob.core.windows.net/photos/banner_cmc.png"
+    },
+    "solo": {
+        "label": "Sologenic",
+        "iconUrl": "https://xrpltoolssotrage.blob.core.windows.net/photos/banner_solo.png"
+    },
+    "coingecko": {
+        "label": "Coin Gecko",
+        "iconUrl": "https://xrpltoolssotrage.blob.core.windows.net/photos/banner_coingecko.png"
+    },
+    "lcw": {
+        "label": "LiveCoinWatch",
+        "iconUrl": "https://xrpltoolssotrage.blob.core.windows.net/photos/banner_lcw.png"
+    },
+    "hotbit": {
+        "label": "Hotbit",
+        "iconUrl": "https://xrpltoolssotrage.blob.core.windows.net/photos/banner_hotbit.png"
+    },
+    "Probit": {
+        "label": "Probit",
+        "iconUrl": "https://xrpltoolssotrage.blob.core.windows.net/photos/banner_probit.png"
+    },
+    "whitebit": {
+        "label": "Whitebit",
+        "iconUrl": "https://xrpltoolssotrage.blob.core.windows.net/photos/banner_whitebit.png"
+    }
+}
