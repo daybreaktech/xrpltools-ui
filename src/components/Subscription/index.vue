@@ -1,42 +1,70 @@
 <template>
-    <div :class="'subscription-cont ' + permissionStatus">
-        <div v-if="permissionStatus === 'default'">
-            You want latest airdrops and updates on your screen? click <span class="here" @click="permit()">here</span> to subscribe!
+    <div :class="'subscription-cont ' + permissionStatus" v-if="permissionStatus != ''">
+        <div v-if="permissionStatus === 'default' || permissionStatus === 'unsubscribed'">
+            <div class="notification-cont">
+                <div class="bell-logo-cont"><BellLogo size="10" color="#6F6F6F"/></div>
+                Click <span class="here" @click="subscribe()">here</span> to turn on Airdrop Notifications
+            </div>
         </div>
-        <div v-if="permissionStatus === 'granted'">
-            You are subscribed to XRPL Tools notifications!
-        </div>        
+        <div v-if="permissionStatus === 'subscribed'">
+             <div class="notification-cont">
+                <div class="bell-logo-cont"><BellLogo size="10" color="#6F6F6F"/></div> 
+                Click <span class="here" @click="unsubscribe()">here</span> to turn off Airdrop Notifications
+            </div>           
+        </div>
         <div v-if="permissionStatus === 'denied'">
-            XRPL Tools is blocked from sending you notifications, if you wish to unblock it please click <a class="here">here</a> for instruction to unblock from your browser
-        </div>                
+            <div class="notification-cont">
+                <div class="bell-logo-cont"><BellLogo size="10" color="#6F6F6F"/></div> 
+                Notification feature is blocked by your browser
+            </div> 
+        </div>
+        <div v-if="permissionStatus === 'not_supported'">
+            <div class="notification-cont">
+                <div class="bell-logo-cont"><BellLogo size="10" color="#6F6F6F"/></div>
+                Your browser does not support push notifications
+            </div>             
+        </div>                                                                  
     </div>
 </template>
 
 <script>
 
-import { subscribe, init, askPermission, checkPermission } from '@/utils/notification';
+import { init, subscribe, checkPermission, unsubscribe } from '@/utils/notification';
+import BellLogo from '@/svg/BellLogo';
 
 export default {
   props: [''],   
   components: {
+      BellLogo
   },
   data() {
     return {
-        permissionStatus: 'default'
+        permissionStatus: ''
     }
   },
   beforeCreate() {
-      init();
   },
   created() {
-      this.checkPermission();
+    this.pageInit();
   },
   mounted() {
   },
   methods: {
-    permit() {
+    pageInit() {
+      let meths = this;
+      init(function(result){
+          meths.permissionStatus = result;
+      });
+    },
+    subscribe() {
         let meths = this;
-        askPermission(function(result) {
+        subscribe(function(result) {
+            meths.permissionStatus = result;
+        });
+    },
+    unsubscribe() {
+        let meths = this;
+        unsubscribe(function(result) {
             meths.permissionStatus = result;
         });
     },   
@@ -51,28 +79,55 @@ export default {
 
 .here {
     text-decoration: underline;
-    color: blue;
+    color: red;
     cursor: pointer;
+    font-weight: bolder;
 }
 
 .subscription-cont {
     font-family: 'Roboto-Regular';
     font-size: 12px;
     margin-bottom: 10px;
-    border: 1px black solid;
     padding: 5px;
+    border-radius: 8px;
+    font-weight: 500;
+    text-align: center;
 }
 
-.granted {
-    background-color: rgba(0, 128, 0, 0.357);
+.default, .unsubscribed {
+    border: 2px solid #FFDA4E;
+    background-color: #FFFBEC;
 }
 
-.default {
-    background-color: rgba(124, 156, 250, 0.487);
+.subscribed {
+    border: 2px rgb(165, 165, 165) solid;
+    background-color: rgba(165, 165, 165, 0);
 }
 
-.denied {
-    background-color: rgba(243, 188, 6, 0.487);
+.subscribed .here {
+    color: #6F6F6F !important;
 }
+
+.denied, .not_supported {
+    border: 2px #FF0000 solid;
+    background-color: #FFF8F8;
+}
+
+.notification-cont {
+    text-align: center;
+    border-radius: 20px;
+    color: #6F6F6F;
+    display: inline-block;
+    padding-top: 2px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.bell-logo-cont {
+    float: left; 
+    margin-right: 7px;
+}
+
+
 
 </style>

@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="layout-container airdrop-container">
-                <el-row>
+                <el-row style="margin-bottom: 10px;">
                     <Subscription/>
                 </el-row>
                 <el-row class="airdrop-title-cont">
@@ -124,7 +124,8 @@ export default {
       FilterSelection,
       CloseLogo,
       WalletSelection,
-      Subscription
+      Subscription,
+      
   },
   data() {
     return {
