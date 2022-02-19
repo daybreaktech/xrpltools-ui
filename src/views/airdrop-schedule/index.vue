@@ -20,21 +20,31 @@
                             <span style="margin-left: 5px; cursor: pointer;" v-if="validateTwitter(airdropInfo.trustline)" @click="goToLink(airdropInfo.trustline.twitterUrl)">
                                 <TwitterLogo size="15"/>
                             </span>                            
+                        </el-row>
+                        <el-row style="margin-top: 10px;" v-if="isDateExpired(airdropInfo.isAirdropExpired) && !isTokenScam(airdropInfo.trustline)">
+                            <span class="airdrop-expired">EXPIRED</span>
                         </el-row>                        
                     </el-col>
                 </div>
             </el-row>
-            <el-row class="airdrop-schedule-info-buttons">
+            <el-row class="airdrop-schedule-info-buttons" >
                 <el-row class="schedule-buttons" style="margin-top: 5px;">
-                <el-col style="padding-top: 7px;" :xs="8" :sm="8" :md="8" :lg="8">
-                    <SoloIcon :trustline="airdropInfo.trustline"/>
-                </el-col>
-                <el-col :xs="8" :sm="8" :md="8" :lg="8" style="padding-top: 15px; text-align: center;">
-                    <div style="margin: auto;"><XummIcon :airdrop-info="airdropInfo" size="40" :trustline-set="isSetTrustline"/></div>
-                </el-col>
-                <el-col style="padding-top: 7px;" :xs="8" :sm="8" :md="8" :lg="8">
-                    <ShareIcon :airdrop-info="airdropInfo"/>
-                </el-col>            
+                    <el-row v-if="!isTokenScam(airdropInfo.trustline)">
+                        <el-col style="padding-top: 7px;" :xs="8" :sm="8" :md="8" :lg="8">
+                            <SoloIcon :trustline="airdropInfo.trustline"/>
+                        </el-col>
+                        <el-col :xs="8" :sm="8" :md="8" :lg="8" style="padding-top: 15px; text-align: center;">
+                            <div style="margin: auto;"><XummIcon :airdrop-info="airdropInfo" size="40" :trustline-set="isSetTrustline"/></div>
+                        </el-col>
+                        <el-col style="padding-top: 7px;" :xs="8" :sm="8" :md="8" :lg="8">
+                            <ShareIcon :airdrop-info="airdropInfo" :disabled="isDisabled(airdropInfo.category)"/>
+                        </el-col>   
+                    </el-row>
+                    <el-row style="padding-left: 20px; padding-right: 20px; padding-top: 20px;" v-else>
+                        <div class="scam-cont">
+                            This token is a scam!
+                        </div>
+                    </el-row>                             
                 </el-row>
             </el-row>
         </el-row>
@@ -49,36 +59,38 @@
             </Adsense>
         </el-row>        
 
-        <div style="margin-top: 20px; margin-bottom: 15px;">
-            <span class="airdrop-schedule-heading">Dates</span>
-        </div>
-        <el-row class="airdrop-schedule-info-cont airdrop-schedule-date-cont">
-            <el-row class="airdrop-schedule-snapshot-cont">
-                <span class="airdrop-schedule-date-label">Snapshot:</span>
-                <span :class="'airdrop-schedule-date-value ' + isDateExpired(airdropInfo.isSnapshotExpired)" > 
-                    &nbsp;{{ airdropInfo.snapshotDate ? moment(String(airdropInfo.snapshotDate)).format('MMM DD [@] ha') : 'N/A' }}
-                </span>
+        <el-row v-show="!isTokenScam(airdropInfo.trustline)">
+            <div style="margin-top: 20px; margin-bottom: 15px;">
+                <span class="airdrop-schedule-heading">Dates</span>
+            </div>
+            <el-row class="airdrop-schedule-info-cont airdrop-schedule-date-cont">
+                <el-row class="airdrop-schedule-snapshot-cont">
+                    <span class="airdrop-schedule-date-label">Snapshot:</span>
+                    <span :class="'airdrop-schedule-date-value ' + isDateExpiredForDateClass(airdropInfo.isSnapshotExpired)" > 
+                        &nbsp;{{ airdropInfo.snapshotDate ? moment(String(airdropInfo.snapshotDate)).format('MMM DD [@] ha') : 'N/A' }}
+                    </span>
+                </el-row>
+                <el-row class="airdrop-schedule-airdrop-cont">
+                    <span class="airdrop-schedule-date-label">Airdrop:</span>
+                    <span :class="'airdrop-schedule-date-value ' + isDateExpiredForDateClass(airdropInfo.isAirdropExpired)"> 
+                        &nbsp;{{ airdropInfo.airdropDate ? moment(String(airdropInfo.airdropDate)).format('MMM DD [@] ha') : 'N/A' }}
+                    </span>
+                </el-row>
             </el-row>
-            <el-row class="airdrop-schedule-airdrop-cont">
-                <span class="airdrop-schedule-date-label">Airdrop:</span>
-                <span :class="'airdrop-schedule-date-value ' + isDateExpired(airdropInfo.isAirdropExpired)"> 
-                    &nbsp;{{ airdropInfo.airdropDate ? moment(String(airdropInfo.airdropDate)).format('MMM DD [@] ha') : 'N/A' }}
-                </span>
-            </el-row>
-        </el-row>
 
-        <div style="margin-top: 20px; margin-bottom: 15px;">
-            <span class="airdrop-schedule-heading">Details</span>
-        </div>
+            <div style="margin-top: 20px; margin-bottom: 15px;">
+                <span class="airdrop-schedule-heading">Details</span>
+            </div>
 
-        <el-row class="airdrop-schedule-info-cont airdrop-schedule-details-cont">
-            <el-row>
-                <div style="white-space: pre-line; word-wrap: break-word;" v-linkified v-html="airdropInfo.longDesc">
+            <el-row :class="'airdrop-schedule-info-cont airdrop-schedule-details-cont ' + isDescDisabled(airdropInfo.category)">
+                <el-row>
+                    <div style="white-space: pre-line; word-wrap: break-word;" v-linkified v-html="airdropInfo.longDesc">
 
-                </div>
-            </el-row>
-            <el-row v-if="airdropInfo.refsUrl" class="schedule-reference" style="margin-top: 20px;">
-                <span class="schedule-details-ref">&#8269; Source Reference <a :href="airdropInfo.refsUrl" target="_blank">here</a></span>
+                    </div>
+                </el-row>
+                <el-row v-if="airdropInfo.refsUrl" class="schedule-reference" style="margin-top: 20px;">
+                    <span class="schedule-details-ref">&#8269; Source Reference <a :href="airdropInfo.refsUrl" target="_blank">here</a></span>
+                </el-row>            
             </el-row>            
         </el-row>
     </el-col> 
@@ -123,8 +135,20 @@ export default {
   mounted() {
   },
   methods: {
-    isDateExpired(isDate) {
-      return isDate === true ? 'date-expired' : '';
+    isDescDisabled(category) {
+        return this.isDisabled(category) ? 'desc-disabled' : '';
+    },
+    isDisabled(category) {
+        return category && category != null && category != '' && (category === "ARCHIVE" || category === "TRASH");
+    },
+    isTokenScam(trusline) {
+        return trusline && trusline != null && trusline.isScam && trusline.isScam == true;
+    },
+    isDateExpiredForDateClass(theDate) {
+        return this.isDateExpired(theDate) == true ? 'date-expired' : '';
+    },
+    isDateExpired(theDate) {
+      return theDate === true;
     },      
     initAddressAndWallet() {
         let meths = this;
@@ -294,9 +318,9 @@ export default {
 
 .airdrop-schedule-info-token {
     border-bottom: 1px solid #C0C0C2;
-    height: 105px;
     padding: 10px;
     padding-top: 15px;
+    position: relative;
 }
 
 .airdrop-schedule-info-token-sub-cont {
@@ -381,7 +405,35 @@ export default {
 }
 
 .date-expired {
-  color: #b51212 !important;
+  color: #FF0000 !important;
+}
+
+.schedule-buttons {
+    min-height: 80px;
+}
+
+.scam-cont {
+    font-family: 'Roboto-Regular';
+    font-size: 12px;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    border: 2px #FF0000 solid;
+    background-color: #FFF8F8;
+    color: #FF0000;    
+}
+
+.airdrop-expired {
+    color: #FF0000;
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: 15px;
+}
+
+.desc-disabled {
+    background-color: #6a6a6a25;
 }
 
 </style>

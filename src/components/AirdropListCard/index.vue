@@ -1,51 +1,56 @@
 <template>
     <div class="airdrop-list-card-cont">
-        <el-col class="airdrop-card-image-cont" :xs="4" :sm="2" :md="3" :lg="3">
-          <div @click="goToFireback(airdrop)" class="airdrop-card-frame" :style="'background-image: url(' + getImage(airdrop) + '),' + 'url(' + require('@/assets/no-image.png') + ')'">
-          </div>
-        </el-col>
-        <el-col class="airdrop-card-info-cont" :xs="16" :sm="20" :md="18" :lg="18">
-          <div @click="onClickFireBack(airdrop)">
-            <el-row class="airdrop-card-info-title-cont">
-              <span class="airdrop-card-info-token">[{{ getTrustlineName(airdrop.trustline) }}]</span> <span class="airdrop-card-info-short-desc">{{ airdrop.shortDesc }}</span>
-            </el-row>
-            <el-row>
-              <span class="airdrop-card-info-dates">Snapshot:</span> 
-              <span :class="'airdrop-card-info-dates-val ' + isDateExpired(airdrop.isSnapshotExpired)">
-                {{ airdrop.snapshotDate ? moment(String(airdrop.snapshotDate)).format('MMM DD [@] ha') : 'N/A' }}
-                </span>
-            </el-row>
-            <el-row>
-              <span class="airdrop-card-info-dates">Airdrop:</span> 
-              <span :class="'airdrop-card-info-dates-val ' + isDateExpired(airdrop.isAirdropExpired)">
-                {{ airdrop.airdropDate ? moment(String(airdrop.airdropDate)).format('MMM DD [@] ha') : 'N/A' }}
-              </span>
-            </el-row> 
-            <el-row>
-              <div class="airdrop-tags-cont">
-                  <span v-for="tag in airdrop.tags" :key="tag">
-                    <span class="airdrop-tags" v-show="validateLowerTags(tag)" :style="'background-color: ' + getTagColor(tag) + ';'">
-                      {{ getTagLabel(tag) }}
-                    </span>
+      <div class="airdrop-scam-cont" v-show="isTokenScam(airdrop.trustline)" @click="onClickFireBack(airdrop)">
+        <span class="stamp is-nope">Scam</span>
+      </div>
+      <div class="airdrop-list-card-main-cont">
+          <el-col class="airdrop-card-image-cont" :xs="4" :sm="2" :md="3" :lg="3">
+            <div @click="goToFireback(airdrop)" class="airdrop-card-frame" :style="'background-image: url(' + getImage(airdrop) + '),' + 'url(' + require('@/assets/no-image.png') + ')'">
+            </div>
+          </el-col>
+          <el-col class="airdrop-card-info-cont" :xs="16" :sm="20" :md="18" :lg="18">
+            <div @click="onClickFireBack(airdrop)">
+              <el-row class="airdrop-card-info-title-cont">
+                <span class="airdrop-card-info-token">[{{ getTrustlineName(airdrop.trustline) }}]</span> <span class="airdrop-card-info-short-desc">{{ airdrop.shortDesc }}</span>
+              </el-row>
+              <el-row>
+                <span class="airdrop-card-info-dates">Snapshot:</span> 
+                <span :class="'airdrop-card-info-dates-val ' + isDateExpired(airdrop.isSnapshotExpired)">
+                  {{ airdrop.snapshotDate ? moment(String(airdrop.snapshotDate)).format('MMM DD [@] ha') : 'N/A' }}
                   </span>
-              </div>
-              <!-- <div class="global-id-tag" v-if="airdrop.formUrl && airdrop.formUrl != null && airdrop.formUrl != ''">
-                <GobalLogo size="40"/>
-              </div> -->
-            </el-row>            
-          </div>                              
-        </el-col>
-        <el-col class="airdrop-card-misc-cont" :xs="4" :sm="2" :md="3" :lg="3">
-          <el-row class="airdrop-card-misc-xumm-icon">
-            <XummIcon :airdrop-info="airdrop" size="35" :trustline-set="isSetTrustline"/>
-          </el-row>
-          <el-row v-if="airdrop.formUrl && airdrop.formUrl != null" class="airdrop-card-misc-form">
-            <div @click="goToUrl(airdrop.formUrl)">(FORM)</div>
-          </el-row>
-          <el-row class="airdrop-card-misc-global-id" v-if="hasGlobalID(airdrop.tags)">
-              <span style="cursor: pointer;" @click="goToGlobalIdTweet()"><GlobalLogo size="45"/></span>
-          </el-row>                              
-        </el-col>
+              </el-row>
+              <el-row>
+                <span class="airdrop-card-info-dates">Airdrop:</span> 
+                <span :class="'airdrop-card-info-dates-val ' + isDateExpired(airdrop.isAirdropExpired)">
+                  {{ airdrop.airdropDate ? moment(String(airdrop.airdropDate)).format('MMM DD [@] ha') : 'N/A' }}
+                </span>
+              </el-row> 
+              <el-row>
+                <div class="airdrop-tags-cont">
+                    <span v-for="tag in airdrop.tags" :key="tag">
+                      <span class="airdrop-tags" v-show="validateLowerTags(tag)" :style="'background-color: ' + getTagColor(tag) + ';'">
+                        {{ getTagLabel(tag) }}
+                      </span>
+                    </span>
+                </div>
+                <!-- <div class="global-id-tag" v-if="airdrop.formUrl && airdrop.formUrl != null && airdrop.formUrl != ''">
+                  <GobalLogo size="40"/>
+                </div> -->
+              </el-row>            
+            </div>                              
+          </el-col>
+          <el-col class="airdrop-card-misc-cont" :xs="4" :sm="2" :md="3" :lg="3">
+            <el-row class="airdrop-card-misc-xumm-icon">
+              <XummIcon :airdrop-info="airdrop" size="35" :trustline-set="isSetTrustline"/>
+            </el-row>
+            <el-row v-if="airdrop.formUrl && airdrop.formUrl != null" class="airdrop-card-misc-form">
+              <div @click="goToUrl(airdrop.formUrl)">(FORM)</div>
+            </el-row>
+            <el-row class="airdrop-card-misc-global-id" v-if="hasGlobalID(airdrop.tags)">
+                <span style="cursor: pointer;" @click="goToGlobalIdTweet()"><GlobalLogo size="45"/></span>
+            </el-row>                              
+          </el-col>      
+      </div>
     </div>
 </template>
 
@@ -90,6 +95,9 @@ export default {
   mounted() {
   },
   methods: {
+    isTokenScam(trusline) {
+        return trusline && trusline != null && trusline.isScam && trusline.isScam == true;
+    },
     isDateExpired(isDate) {
       return isDate === true ? 'date-expired' : '';
     },
@@ -184,6 +192,11 @@ export default {
 .airdrop-list-card-cont {
   height: 100%;
   font-family: 'Roboto-Regular';
+  padding-top: 8px;
+  padding-right: 8px;
+  padding-left: 8px;
+  padding-top: 5px;
+  position: relative;
 }
 
 .airdrop-list-card-cont .el-col {
@@ -284,6 +297,40 @@ export default {
 .airdrop-card-misc-global-id {
   text-align: center;
   margin-top: 5px;
+}
+
+.is-nope {
+  color: #79111121;
+  transform: rotate(6deg);
+  border: 0.5rem double #7911116e;
+	-webkit-mask-position: 32px 48px;
+  font-size: 32px;  
+}
+
+.stamp {
+	color: #79111136;
+	font-size: 50px;
+	font-weight: 700;
+	border: 4px solid #79111117;
+	display: inline-block;
+	padding: 4px 16px;
+	text-transform: uppercase;
+	border-radius: 16px;
+	font-family: 'Courier';
+	-webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
+  -webkit-mask-size: 944px 604px;
+  mix-blend-mode: multiply;
+}
+
+.airdrop-scam-cont {
+  position: absolute;
+  z-index: 10;
+  padding-top: 5px;
+  padding-left: 70px;
+}
+
+.airdrop-list-card-main-cont {
+  z-index: 11;
 }
 
 </style>

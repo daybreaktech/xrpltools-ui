@@ -248,7 +248,7 @@ export default {
                 this.selectedFilterLabel = "New / Recently Added";
                 break;
             case "CAL":
-                this.selectedFilterLabel = "Calendar";
+                this.selectedFilterLabel = "All";
                 break;
             case "HOLD":
                 this.selectedFilterLabel  = "For Holders"
@@ -505,10 +505,6 @@ export default {
 
 .airdrop-list-item {
     height: 98px;
-    padding-top: 8px;
-    padding-right: 8px;
-    padding-left: 8px;
-    padding-top: 5px;
     border-bottom: 1px solid #C0C0C2;
 }
 
