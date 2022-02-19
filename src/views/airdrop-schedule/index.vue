@@ -55,13 +55,13 @@
         <el-row class="airdrop-schedule-info-cont airdrop-schedule-date-cont">
             <el-row class="airdrop-schedule-snapshot-cont">
                 <span class="airdrop-schedule-date-label">Snapshot:</span>
-                <span class="airdrop-schedule-date-value"> 
+                <span :class="'airdrop-schedule-date-value ' + isDateExpired(airdropInfo.isSnapshotExpired)" > 
                     &nbsp;{{ airdropInfo.snapshotDate ? moment(String(airdropInfo.snapshotDate)).format('MMM DD [@] ha') : 'N/A' }}
                 </span>
             </el-row>
             <el-row class="airdrop-schedule-airdrop-cont">
                 <span class="airdrop-schedule-date-label">Airdrop:</span>
-                <span class="airdrop-schedule-date-value"> 
+                <span :class="'airdrop-schedule-date-value ' + isDateExpired(airdropInfo.isAirdropExpired)"> 
                     &nbsp;{{ airdropInfo.airdropDate ? moment(String(airdropInfo.airdropDate)).format('MMM DD [@] ha') : 'N/A' }}
                 </span>
             </el-row>
@@ -123,6 +123,9 @@ export default {
   mounted() {
   },
   methods: {
+    isDateExpired(isDate) {
+      return isDate === true ? 'date-expired' : '';
+    },      
     initAddressAndWallet() {
         let meths = this;
         this.initWalletAddress(function(value){
@@ -375,6 +378,10 @@ export default {
 
 .airdrop-schedule-return {
     margin-right: 8px;
+}
+
+.date-expired {
+  color: #b51212 !important;
 }
 
 </style>

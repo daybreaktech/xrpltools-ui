@@ -11,20 +11,22 @@
             </el-row>
             <el-row>
               <span class="airdrop-card-info-dates">Snapshot:</span> 
-              <span class="airdrop-card-info-dates-val">
+              <span :class="'airdrop-card-info-dates-val ' + isDateExpired(airdrop.isSnapshotExpired)">
                 {{ airdrop.snapshotDate ? moment(String(airdrop.snapshotDate)).format('MMM DD [@] ha') : 'N/A' }}
                 </span>
             </el-row>
             <el-row>
               <span class="airdrop-card-info-dates">Airdrop:</span> 
-              <span class="airdrop-card-info-dates-val">
+              <span :class="'airdrop-card-info-dates-val ' + isDateExpired(airdrop.isAirdropExpired)">
                 {{ airdrop.airdropDate ? moment(String(airdrop.airdropDate)).format('MMM DD [@] ha') : 'N/A' }}
               </span>
             </el-row> 
             <el-row>
               <div class="airdrop-tags-cont">
-                  <span class="airdrop-tags" v-for="tag in airdrop.tags" :key="tag" v-if="tag != 'GID'" :style="'background-color: ' + getTagColor(tag) + ';'">
-                    {{ getTagLabel(tag) }}
+                  <span v-for="tag in airdrop.tags" :key="tag">
+                    <span class="airdrop-tags" v-show="validateLowerTags(tag)" :style="'background-color: ' + getTagColor(tag) + ';'">
+                      {{ getTagLabel(tag) }}
+                    </span>
                   </span>
               </div>
               <!-- <div class="global-id-tag" v-if="airdrop.formUrl && airdrop.formUrl != null && airdrop.formUrl != ''">
@@ -88,6 +90,12 @@ export default {
   mounted() {
   },
   methods: {
+    isDateExpired(isDate) {
+      return isDate === true ? 'date-expired' : '';
+    },
+    validateLowerTags(tag) {
+      return tag === "IMP" || tag === "NEW";
+    },
     goToGlobalIdTweet() {
       window.open('https://twitter.com/XRP_Airdrops/status/1473284266205265921', '_blank');
     },
@@ -228,6 +236,10 @@ export default {
   color: #181818;
 }
 
+.date-expired {
+  color: #b51212 !important;
+}
+
 .airdrop-card-misc-xumm-icon {
   text-align: center;
   margin-top: 8px;
@@ -273,6 +285,5 @@ export default {
   text-align: center;
   margin-top: 5px;
 }
-
 
 </style>

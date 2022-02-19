@@ -35,21 +35,30 @@
                     </Adsense>
                 </el-row>
 
-                <el-row class="airdrop-title-cont">
-                    <span class="airdrop-title">{{ selectedFilterLabel }}</span><span class="airdrop-list-count"> ({{ airdrops.filtered.length }})</span> <span class="airdrop-filter" @click="showFilterModal()"><FilterLogo size="20"/></span>  
+                <el-row v-loading="filteredLoading">
+                    <el-row class="airdrop-title-cont">
+                        <transition name="fade" mode="out-in">
+                            <span :key="selectedFilterLabel" class="airdrop-title">{{ selectedFilterLabel }} ({{ airdrops.filtered.length }})</span>
+                        </transition>
+                        <span class="airdrop-filter"><FilterLogo size="20"/></span>  
+                    </el-row>
+                    <el-row class="margin-bottom: 10px;">
+                        <FilterSelectionV2 :on-click-fire-back="modalFilterSelectFireback"/>
+                    </el-row>
+                    <el-row>
+                        <div class="airdrop-list">
+                            <div :class="'airdrop-list-item ' + assignLast(airdrops.filtered, index)"
+                                v-for="(item, index) in airdrops.filtered" :key="(item, index)"
+                                :style="applyBackgroundColorVisited(item.id)">
+                                <AirdropListCard :airdrop="item" :on-click-fire-back="fireBackFromCard"  :account-trustlines="accountTrustlines"/>
+                            </div>                                     
+                        </div>   
+                    </el-row>                    
                 </el-row>
-                <el-row>
-                    <div class="airdrop-list" v-loading="filteredLoading">
-                        <div :class="'airdrop-list-item ' + assignLast(airdrops.filtered, index)"
-                            v-for="(item, index) in airdrops.filtered" :key="(item, index)"
-                            :style="applyBackgroundColorVisited(item.id)">
-                            <AirdropListCard :airdrop="item" :on-click-fire-back="fireBackFromCard"  :account-trustlines="accountTrustlines"/>
-                        </div>                                     
-                    </div>   
-                </el-row>
+
             </div>
 
-            <v-modal class="filter-modal" :clickToClose="false" name="filter-modal" height="380" width="320" transition="fade" :adaptive="true"> 
+            <v-modal class="filter-modal" :clickToClose="false" name="filter-modal" height="420" width="320" transition="fade" :adaptive="true"> 
                 <el-row class="filter-modal-top">
                     <el-row>
                         <div class="filter-modal-close-cont" @click="closeFilterModal()">
@@ -99,7 +108,7 @@ import AirdropTable from '@/components/AirdropTable';
 import AirdropCard from '@/components/AirdropCard';
 import AirdropListCard from '@/components/AirdropListCard'
 import Tags from '@/components/Tags';
-import { getAirdropsByFeatured, getAirdropsByNew, getAirdropsByCalendar, getAirdropsByTag, getAirdropsByHolders } from '@/api/airdrops-api';
+import { getAirdropsByFeatured, getAirdropsByNew, getAirdropsByCalendar, getAirdropsByTag, getAirdropsByHolders, getAirdropsByExpired, getAirdropsByFaucets } from '@/api/airdrops-api';
 import AirdropLogo from '@/svg/AirdropLogo';
 import TwitterLogo from '@/svg/TwitterLogo';
 import FilterLogo from '@/svg/FilterLogo';
@@ -108,6 +117,7 @@ import Subscription from '@/components/Subscription';
 import FilterSelection from '@/components/FilterSelection';
 import CloseLogo from '@/svg/CloseLogo'
 import WalletSelection from '@/components/WalletSelection';
+import FilterSelectionV2 from '@/components/FilterSelectionV2';
 
 
 export default {
@@ -126,7 +136,7 @@ export default {
       CloseLogo,
       WalletSelection,
       Subscription,
-      
+      FilterSelectionV2
   },
   data() {
     return {
@@ -242,7 +252,10 @@ export default {
                 break;
             case "HOLD":
                 this.selectedFilterLabel  = "For Holders"
-                break;                
+                break;   
+            case "FCT":
+                this.selectedFilterLabel  = "Faucets"
+                break;                                 
             case "HOT":
                 this.selectedFilterLabel = "Hot";
                 break;
@@ -251,7 +264,10 @@ export default {
                 break;
             case "GID":
                 this.selectedFilterLabel = "Global-ID Required";
-                break;                                                                                                                
+                break;      
+            case "EXP":
+                this.selectedFilterLabel = "Expired";
+                break;                                                                                                                           
         }
     },
     modalFilterSelectFireback(selection) {
@@ -343,7 +359,11 @@ export default {
             case "HOLD":
                 this.populateFilteredFromData(getAirdropsByTag, "HOLD");
                 this.triggerEvent("airdrops", "filter-hold", "Selected Filter Hold", "Hold");
-                break;                
+                break;     
+            case "FCT":
+                this.populateFilteredFromData(getAirdropsByFaucets);
+                this.triggerEvent("airdrops", "filter-fct", "Selected Filter Faucets", "Hold");
+                break;                              
             case "HOT":
                 this.populateFilteredFromData(getAirdropsByTag, "HOT");
                 this.triggerEvent("airdrops", "filter-hot", "Selected Filter Hot", "Hot");
@@ -355,7 +375,11 @@ export default {
             case "GID":
                 this.populateFilteredFromData(getAirdropsByTag, "GID");
                 this.triggerEvent("airdrops", "filter-gid", "Selected Filter Global-ID", "Global-ID");
-                break;                                                                   
+                break;       
+            case "EXP":
+                this.populateFilteredFromData(getAirdropsByExpired);
+                this.triggerEvent("airdrops", "filter-exp", "Selected Filter Expired", "Expired");
+                break;                                                                             
         }        
     },
     populateFilteredFromData(method, tag) {
@@ -463,6 +487,7 @@ export default {
     font-weight: bold;
     letter-spacing: 0.5px;
     color: #323232;
+    transition: all .3s cubic-bezier(.645,.045,.355,1);
 }
 
 .airdrop-title-cont {
@@ -474,7 +499,8 @@ export default {
     border: 1px solid #C0C0C2;
     box-sizing: border-box;
     border-radius: 15px;
-    min-height: 100px;    
+    min-height: 100px;
+    margin-top: 15px;    
 }
 
 .airdrop-list-item {
@@ -574,7 +600,7 @@ export default {
 .airdrop-filter {
     float: right;
     margin-top: 5px;
-    margin-right: 15px;
+    margin-right: 0px;
     cursor: pointer;
 }
 
