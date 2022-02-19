@@ -137,10 +137,7 @@ export default {
           break;
         case "NEW":
           label = "New";
-          break;   
-        case "HOT":
-          label = "Hot";
-          break;                                     
+          break;                                    
       }
       return label;
     },
@@ -162,10 +159,7 @@ export default {
           break;
         case "NEW":
           color = "#F4B906";
-          break;   
-        case "HOT":
-          color = "#ca5507";
-          break;                                     
+          break;                                    
       }
       return color;
     }

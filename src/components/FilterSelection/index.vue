@@ -5,7 +5,6 @@
             <el-row><el-radio label="NEW">Recently Added / New</el-radio></el-row>
             <el-row><el-radio label="CAL">Calendar</el-radio></el-row>
             <el-row><el-radio label="HOLD">For Holders</el-radio></el-row>
-            <el-row><el-radio label="HOT">Hot</el-radio></el-row>
             <el-row><el-radio label="IMP">Important</el-radio></el-row>
             <el-row><el-radio label="GID">Global-ID Required</el-radio></el-row>
         </el-radio-group>          
