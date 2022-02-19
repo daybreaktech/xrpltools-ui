@@ -9,7 +9,7 @@
             <div class="layout-container airdrop-container">
                 <el-row style="margin-bottom: 10px;">
                     <Subscription/>
-                </el-row>
+                </el-row>              
                 <el-row class="airdrop-title-cont">
                     <span class="airdrop-title">Featured</span>
                 </el-row>
@@ -109,6 +109,7 @@ import FilterSelection from '@/components/FilterSelection';
 import CloseLogo from '@/svg/CloseLogo'
 import WalletSelection from '@/components/WalletSelection';
 
+
 export default {
   name: 'AirdropList',
   components: {
@@ -143,7 +144,7 @@ export default {
         visitedAirdrops: null,
         assignedWallet: null,
         accountTrustlines: undefined,
-        permissionStatus: '',       
+        permissionStatus: '',  
     }
   },
   beforeCreate() {
