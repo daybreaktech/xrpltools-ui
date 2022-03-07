@@ -16,11 +16,7 @@
                 <el-row>
                     <!-- <AirdropCard :airdrop-list="featuredList" :item-fire-back="airdropItemClicked"/> -->
                     <div class="airdrop-featured airdrop-list" v-loading="featuredLoading">
-                        <div :class="'airdrop-list-item ' + assignLast(airdrops.featured, index)" 
-                            v-for="(item, index) in airdrops.featured" :key="(item, index)"
-                            :style="applyBackgroundColorVisited(item.id)" >
-                            <AirdropListCard :airdrop="item" :on-click-fire-back="fireBackFromCard" :account-trustlines="accountTrustlines"/>
-                        </div>                                     
+                        <AirdropFeatured :airdrops="airdrops.featured" :on-click-fire-back="fireBackFromCard"/>
                     </div>
                 </el-row>               
 
@@ -118,6 +114,7 @@ import FilterSelection from '@/components/FilterSelection';
 import CloseLogo from '@/svg/CloseLogo'
 import WalletSelection from '@/components/WalletSelection';
 import FilterSelectionV2 from '@/components/FilterSelectionV2';
+import AirdropFeatured from '@/components/AirdropFeatured'
 
 
 export default {
@@ -126,6 +123,7 @@ export default {
       AirdropItem,
       AirdropTable,
       AirdropCard,
+      AirdropFeatured,
       Tags,
       AirdropLogo,
       TwitterLogo,
@@ -634,5 +632,9 @@ export default {
 .airdro-cont .el-loading-mask {
     z-index: 19;
     border-radius: 15px;
+}
+
+.airdrop-featured {
+    padding: 10px;
 }
 </style>
