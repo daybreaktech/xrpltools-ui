@@ -1,8 +1,8 @@
 <template>
     <div class="share-icon-cont">
-        <div class="share-icon-logo" @click="shareToTwitter()">
-          <el-tooltip content="Share this airdrop information">
-            <ShareLogo :size="45" color="#3d3c3c"/>
+        <div class="share-icon-logo" @click="goShare()">
+          <el-tooltip :content="this.disabled == false ? 'Share this airdrop information' : 'Sharing this airdrop is disabled'">
+            <ShareLogo :size="45" :color="disabled === false ? '#343434' : '#aeadadaa'"/>
           </el-tooltip>
         </div>          
     </div>
@@ -14,7 +14,7 @@ import moment from 'moment';
 import ShareLogo from '@/svg/ShareLogo'
 
 export default {
-  props: ['airdropInfo'],
+  props: ['airdropInfo', 'disabled'],
   components: {
       ShareLogo
   },
@@ -28,6 +28,11 @@ export default {
   mounted() {
   },
   methods: {
+    goShare() {
+      if (this.disabled == false) {
+        this.shareToTwitter();
+      }
+    },
     shareToTwitter() {
       this.triggerEvent("schedule", "schedule-icon-share", "Schedule Share Icon Clicked", "");  
       const airdrop = this.airdropInfo;
@@ -121,6 +126,10 @@ export default {
 
 .share-icon-logo {
   cursor: pointer;
+}
+
+.collalala {
+  color: #aeadadaa;
 }
 
 </style>

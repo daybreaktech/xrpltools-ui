@@ -22,8 +22,20 @@ export function getAirdropsByHolders() {
     });    
 }
 
+export function getAirdropsByFaucets() {
+    return fetch(API_PATH + "/airdrop/publisher/faucets", { 
+        method: "GET"
+    });    
+}
+
 export function getAirdropsByNew() {
     return fetch(API_PATH + "/airdrop/publisher/calendar/added?days=7", { 
+        method: "GET"
+    });    
+}
+
+export function getAirdropsByExpired() {
+    return fetch(API_PATH + "/airdrop/publisher/calendar/expired", { 
         method: "GET"
     });    
 }
