@@ -68,7 +68,6 @@ export function init(callback) {
             })
             .then(function(reg) {
               checkPermissionAndSubscription(function(value) {
-                console.log(value);
                 callback(value);
               });
 

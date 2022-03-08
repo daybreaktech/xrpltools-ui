@@ -1,6 +1,6 @@
 <template>
     <div class="airdrop-featured">
-        <div class="airdrop-featured-main-cont" v-for="index in chuckedAirdrops " :key="index">
+        <div class="airdrop-featured-main-cont" v-for="index in chuckedAirdrops" :key="index">
             <div class="airdrop-featured-cont" v-for="airdrop in index" :key="airdrop">
                 <div class="airdrop-featured-item-cont">
                     <div class="airdrop-featured-icon" @click="goToFireback(airdrop)" :style="'background-image: url(' + getImage(airdrop) + '),' + 'url(' + require('@/assets/no-image.png') + ')'"></div>
@@ -22,11 +22,18 @@ export default {
         }
     },
     watch: {
-        "airdrops": function(value) {
-            this.loadFeaturedList(value);
+        "airdrops": {
+            handler(list) {
+                this.loadFeaturedList(list);
+            },
+            deep: true
         }
     },
-    async mounted() {
+    beforeCreate() {
+
+    },
+    created() {
+        this.loadFeaturedList(this.airdrops);
     },
     methods:{
         loadFeaturedList(list) {

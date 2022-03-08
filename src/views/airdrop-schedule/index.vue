@@ -213,21 +213,12 @@ export default {
     goBack() {
         const route = this.$route.query.route;
 
-        if (route) {
-            this.$router.push({
-                name: route,
-                params: {
-                    carryInfo: this.carryInfo
-                }
-            })
-        } else {
-            this.$router.push({
-                name: 'airdrops',
-                params: {
-                    carryInfo: this.carryInfo
-                }                
-            })            
-        }
+        this.$router.push({
+            name: route ? route : 'airdrops',
+            params: {
+                carryInfo: this.carryInfo
+            }
+        })
     },
     initAirdropInfo() {
         let meths = this;
