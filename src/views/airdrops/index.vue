@@ -35,25 +35,31 @@
                     </Adsense>
                 </el-row>
 
-                <el-row v-loading="filteredLoading">
+                <el-row>
                     <el-row class="airdrop-title-cont">
                         <transition name="fade" mode="out-in">
                             <span :key="selectedFilterLabel" class="airdrop-title">{{ selectedFilterLabel }} ({{ airdrops.filtered.length }})</span>
                         </transition>
-                        <span class="airdrop-filter"><FilterLogo size="20"/></span>  
+                        <span class="airdrop-filter" v-show="assignedWallet != undefined && accountTrustlines != undefined">
+                            <el-tooltip :content="trustlineFiltered == false ? 'Toggle to show only trustline from wallet' : 'Toggle to show all airdrops'">
+                                <TrustlineFilterIcon size="30" :on-fire-back="trustlineFilterIconClick" :is-filtered-trustline="trustlineFiltered"/>
+                            </el-tooltip>
+                        </span>  
                     </el-row>
-                    <el-row class="margin-bottom: 10px;">
-                        <FilterSelectionV2 :on-click-fire-back="modalFilterSelectFireback"/>
-                    </el-row>
-                    <el-row>
-                        <div class="airdrop-list">
-                            <div :class="'airdrop-list-item ' + assignLast(airdrops.filtered, index)"
-                                v-for="(item, index) in airdrops.filtered" :key="(item, index)"
-                                :style="applyBackgroundColorVisited(item.id)">
-                                <AirdropListCard :airdrop="item" :on-click-fire-back="fireBackFromCard"  :account-trustlines="accountTrustlines"/>
-                            </div>                                     
-                        </div>   
-                    </el-row>                    
+                    <div v-loading="filteredLoading">
+                        <el-row class="margin-bottom: 10px;">
+                            <FilterSelectionV2 :on-click-fire-back="modalFilterSelectFireback"/>
+                        </el-row>
+                        <el-row>
+                            <div class="airdrop-list">
+                                <div :class="'airdrop-list-item ' + assignLast(airdrops.filtered, index)"
+                                    v-for="(item, index) in airdrops.filtered" :key="(item, index)"
+                                    :style="applyBackgroundColorVisited(item.id)">
+                                    <AirdropListCard :airdrop="item" :on-click-fire-back="fireBackFromCard"  :account-trustlines="accountTrustlines"/>
+                                </div>                                     
+                            </div>   
+                        </el-row>  
+                    </div>                  
                 </el-row>
 
             </div>
@@ -100,7 +106,7 @@
 
 import moment from 'moment';
 import { getSelectedFilter, initiateFilter, setFilter } from '@/utils/filter-selection';
-import { setAirdropAccount, getSavedAirdropAccount, getAccountTrustlines, removeAirdropAccount, getAccountTrustlinesRipple } from '@/utils/airdrop-account';
+import { setAirdropAccount, getSavedAirdropAccount, removeAirdropAccount, getAccountTrustlinesRipple } from '@/utils/airdrop-account';
 import { initVisits, getVisitsToArray } from '@/utils/airdrop-visit';
 import { getScreenMode } from '@/utils/screenmode'
 import AirdropItem from '@/components/AirdropItem';
@@ -112,13 +118,13 @@ import { getAirdropsByFeatured, getAirdropsByNew, getAirdropsByCalendar, getAird
 import AirdropLogo from '@/svg/AirdropLogo';
 import TwitterLogo from '@/svg/TwitterLogo';
 import FilterLogo from '@/svg/FilterLogo';
+import TrustlineFilterIcon from '@/components/icons/TrustlineFilterIcon';
 import AirdropBanner from '@/components/AirdropBanner';
 import Subscription from '@/components/Subscription';
 import FilterSelection from '@/components/FilterSelection';
 import CloseLogo from '@/svg/CloseLogo'
 import WalletSelection from '@/components/WalletSelection';
 import FilterSelectionV2 from '@/components/FilterSelectionV2';
-
 
 export default {
   name: 'AirdropList',
@@ -136,7 +142,8 @@ export default {
       CloseLogo,
       WalletSelection,
       Subscription,
-      FilterSelectionV2
+      FilterSelectionV2,
+      TrustlineFilterIcon
   },
   data() {
     return {
@@ -153,9 +160,13 @@ export default {
         filteredLoading: false,
         visitedAirdrops: null,
         assignedWallet: null,
+        processing: false,
+        trustlineFiltered: false,
         accountTrustlines: undefined,
         permissionStatus: '',  
     }
+  },
+  watch: {
   },
   beforeCreate() {
       initiateFilter();
@@ -169,12 +180,58 @@ export default {
       this.setFilterLabel();
   },
   methods: {
+    initTrustlineFilter() {
+        let meths = this;
+        if (meths.processing == false) {
+            meths.checkTrustlineCondition(function(value) {
+                meths.processing = true;
+                meths.filterFilteredAirdropsFromTrustline(function(list) {
+                    meths.airdrops.filtered = list;
+                    meths.processing = false;
+                });                
+            })
+        }
+    },
+    checkTrustlineCondition(callback) {
+        if (this.trustlineFiltered == true 
+            && this.assignedWallet != null 
+            && this.accountTrustlines != undefined 
+            && this.airdrops.filtered != []) {
+            callback(true);
+        }       
+    },
+    trustlineFilterIconClick(value) {
+        this.trustlineFiltered = value;
+        if (value == true) {
+            this.initTrustlineFilter();
+        } else {
+            this.callFromApi();
+        }
+    },
+    filterFilteredAirdropsFromTrustline(callback) {
+        let meths = this;   
+        let filteredAirdrops = meths.airdrops.filtered.filter(airdrop => {
+            return meths.lookupAirdropTrustline(airdrop);
+        });
+        callback(filteredAirdrops);
+    },
+    lookupAirdropTrustline(airdrop) {
+        if (airdrop.trustline && airdrop.trustline != null) {
+            let matches = this.accountTrustlines.filter(trustline => {
+                return airdrop.trustline.issuerAddress == trustline.issuerAddress 
+                && airdrop.trustline.currencyCode == trustline.currencyCode;
+            });
+
+            return matches.length > 0;
+        } else {
+            return false;
+        } 
+    },
     removeWallet() {
         this.closeWalletModal();
         removeAirdropAccount();
-        this.assignedWallet = null;
         this.initWalletAddress();
-        
+        this.callFromApi();
     },
     initWalletAddress() {
         let meths = this;
@@ -200,6 +257,7 @@ export default {
                 }
             })            
         } else {
+            this.trustlineFiltered = false;
             this.assignedWallet = null;
             this.accountTrustlines = [];
         }
@@ -237,7 +295,8 @@ export default {
         params: {
             carryInfo: {
                 airdrops: this.airdrops,
-                position: document.documentElement.scrollTop
+                position: document.documentElement.scrollTop,
+                trustlineFiltered: this.trustlineFiltered
             }
         }
       });
@@ -315,6 +374,7 @@ export default {
             meths.visitedAirdrops = getVisitsToArray();
             meths.populateData(carryInfo.airdrops);
             document.documentElement.scrollTop = carryInfo.position;
+            meths.trustlineFiltered = carryInfo.trustlineFiltered;
 
             setTimeout(function(){ 
                 window.scrollTo({
@@ -344,7 +404,6 @@ export default {
             meths.navigateToFilterApiCall();
         });
     },
-
     navigateToFilterApiCall() {
         this.filteredLoading = true;
         switch (this.selectedFilter) {
@@ -396,6 +455,7 @@ export default {
     populateFiltered(data) {
         let meths = this;
         meths.airdrops.filtered = data;
+        this.initTrustlineFilter();
     },
     populateData(data) {
         let meths = this;
@@ -598,6 +658,12 @@ export default {
     margin-top: 5px;
     margin-right: 0px;
     cursor: pointer;
+    border: 1px solid black;
+    padding-top: 5px;
+    padding-bottom: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+    border-radius: 5px;
 }
 
 .filter-modal .vm--modal {
