@@ -42,22 +42,19 @@
                             </el-tooltip>
                         </span>  
                     </el-row>
-                    <div v-loading="filteredLoading">
-                        <el-row class="margin-bottom: 10px;">
-                            <FilterSelectionV2 :on-click-fire-back="modalFilterSelectFireback"/>
-                        </el-row>
-                        <el-row>
-                            <div class="airdrop-list">
-                                <div :class="'airdrop-list-item ' + assignLast(airdrops.filtered, index)"
-                                    v-for="(item, index) in airdrops.filtered" :key="(item, index)"
-                                    :style="applyBackgroundColorVisited(item.id)">
-                                    <AirdropListCard :airdrop="item" :on-click-fire-back="fireBackFromCard"  :account-trustlines="accountTrustlines"/>
-                                </div>                                     
-                            </div>   
-                        </el-row>  
-                    </div>                  
+                    <el-row class="margin-bottom: 10px;">
+                        <FilterSelectionV2 :on-click-fire-back="modalFilterSelectFireback"/>
+                    </el-row>
+                    <el-row v-loading="filteredLoading">
+                        <div class="airdrop-list">
+                            <div :class="'airdrop-list-item ' + assignLast(airdrops.filtered, index)"
+                                v-for="(item, index) in airdrops.filtered" :key="(item, index)"
+                                :style="applyBackgroundColorVisited(item.id)">
+                                <AirdropListCard :airdrop="item" :on-click-fire-back="fireBackFromCard"  :account-trustlines="accountTrustlines"/>
+                            </div>                                     
+                        </div>   
+                    </el-row>                
                 </el-row>
-
             </div>
 
             <v-modal class="filter-modal" :clickToClose="false" name="filter-modal" height="420" width="320" transition="fade" :adaptive="true"> 
