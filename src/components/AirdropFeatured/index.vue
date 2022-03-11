@@ -84,6 +84,7 @@ export default {
 
 .airdrop-featured-item-cont {
     text-align: center;
+    cursor: pointer;
 }
 
 .airdrop-featured {

@@ -20,7 +20,7 @@ export default {
     return {
         moment: moment,
         color: '',
-        status: false,
+        status: true,
     }
   },
   beforeCreate() {

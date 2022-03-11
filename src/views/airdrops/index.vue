@@ -34,10 +34,10 @@
                 <el-row>
                     <el-row class="airdrop-title-cont">
                         <transition name="fade" mode="out-in">
-                            <span :key="selectedFilterLabel" class="airdrop-title">{{ selectedFilterLabel }} ({{ airdrops.filtered.length }})</span>
+                            <span :key="selectedFilterLabel" class="airdrop-title">{{ selectedFilterLabel }} <span class="airdrop-count">({{ filteredLoading == true ? '...' : airdrops.filtered.length }})</span></span>
                         </transition>
                         <span class="airdrop-filter" v-show="assignedWallet != undefined && accountTrustlines != undefined">
-                            <el-tooltip :content="trustlineFiltered == false ? 'Toggle to show only trustline from wallet' : 'Toggle to show all airdrops'">
+                            <el-tooltip :content="trustlineFiltered == false ? 'Toggle show added trustlines' : 'Toggle to hide added trustlines'">
                                 <TrustlineFilterIcon size="30" :on-fire-back="trustlineFilterIconClick" :is-filtered-trustline="trustlineFiltered"/>
                             </el-tooltip>
                         </span>  
@@ -156,7 +156,7 @@ export default {
         visitedAirdrops: null,
         assignedWallet: null,
         processing: false,
-        trustlineFiltered: false,
+        trustlineFiltered: true,
         accountTrustlines: undefined,
         permissionStatus: '',  
     }
@@ -188,7 +188,7 @@ export default {
         }
     },
     checkTrustlineCondition(callback) {
-        if (this.trustlineFiltered == true 
+        if (this.trustlineFiltered == false 
             && this.assignedWallet != null 
             && this.accountTrustlines != undefined 
             && this.airdrops.filtered != []) {
@@ -198,15 +198,15 @@ export default {
     trustlineFilterIconClick(value) {
         this.trustlineFiltered = value;
         if (value == true) {
-            this.initTrustlineFilter();
-        } else {
             this.callFromApi();
+        } else {
+            this.initTrustlineFilter();
         }
     },
     filterFilteredAirdropsFromTrustline(callback) {
         let meths = this;   
         let filteredAirdrops = meths.airdrops.filtered.filter(airdrop => {
-            return meths.lookupAirdropTrustline(airdrop);
+            return !meths.lookupAirdropTrustline(airdrop);
         });
         callback(filteredAirdrops);
     },
@@ -543,6 +543,10 @@ export default {
     letter-spacing: 0.5px;
     color: #323232;
     transition: all .3s cubic-bezier(.645,.045,.355,1);
+}
+
+.airdrop-count {
+    font-size: 21px;
 }
 
 .airdrop-title-cont {
