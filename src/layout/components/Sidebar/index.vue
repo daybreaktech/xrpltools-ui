@@ -13,7 +13,7 @@
           :collapse-transition="false"
           mode="vertical"
         >
-          <el-menu-item>XRPL Tools Beta v2.5.0</el-menu-item>
+          <el-menu-item>XRPL Tools Beta v2.8.0</el-menu-item>
           <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
         </el-menu>
       </el-scrollbar>
